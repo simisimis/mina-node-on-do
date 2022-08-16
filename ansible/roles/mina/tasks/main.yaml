@@ -1,0 +1,5 @@
+---
+- name: install jq
+  apt:
+    name: jq
+    state: latest

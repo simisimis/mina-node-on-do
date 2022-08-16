@@ -19,6 +19,7 @@
         devShells.default = mkShell {
           buildInputs = [
             terraform
+            ansible
             just
             zsh
           ];
@@ -28,7 +29,7 @@
 
             $(just -l |sed 's/^Available recipes:/The following `just` recipes are available:/')
             EOF
-            export DO_API_TOKEN=${do_api_token}
+            export TF_VAR_do_token=${do_api_token}
             exec zsh
           '';
         };
