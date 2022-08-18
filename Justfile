@@ -1,6 +1,6 @@
-# create droplet with terraform
+# create droplet with terraform and prepare ansible
 apply:
-  terraform apply ./terraform/main.tf
+  terraform -chdir=terraform apply -auto-approve
 # destroy Mina node droplet
 destroy:
-  terraform destroy
+  terraform -chdir=terraform destroy -auto-approve

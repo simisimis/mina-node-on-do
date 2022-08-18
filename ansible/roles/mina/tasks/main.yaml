@@ -1,5 +1,12 @@
 ---
-- name: install jq
-  apt:
-    name: jq
-    state: latest
+- name: Add mina user with sudo rights
+  user:
+    name: mina
+    group: sudo
+
+- name: Add SSH key to user
+  authorized_key:
+    user: mina
+    state: present
+    key: "{{ lookup('file', pub_key) }}"
+

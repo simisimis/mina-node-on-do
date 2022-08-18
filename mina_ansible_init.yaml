@@ -1,0 +1,16 @@
+---
+- name: Prepare mina node for ansible
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Add ansible user and grant sudo rights
+      user:
+        name: ansible
+        group: sudo
+        
+    - name: Add SSH key to ansible user
+      authorized_key:
+        user: ansible
+        state: present
+        key: "{{ lookup('file', pub_key) }}"

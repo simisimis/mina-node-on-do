@@ -1,8 +1,0 @@
----
-- name: Create mina node
-  hosts: all
-  remote_user: ansible
-  become: yes
-
-  roles:
-  - mina

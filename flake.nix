@@ -12,7 +12,7 @@
         pkgs = import nixpkgs {
           inherit system;
         };
-        do_api_token = builtins.readFile (builtins.toPath ("${builtins.getEnv("PWD")}/secrets/env"));
+        do_api_token = builtins.readFile (builtins.toPath ("${builtins.getEnv("PWD")}/secrets/do_token"));
       in
       with pkgs;
       {
@@ -30,6 +30,8 @@
             $(just -l |sed 's/^Available recipes:/The following `just` recipes are available:/')
             EOF
             export TF_VAR_do_token=${do_api_token}
+            export TF_VAR_prv_key=id_rsa_DO_mina_node
+            export TF_VAR_pub_key=id_rsa_DO_mina_node.pub
             exec zsh
           '';
         };
