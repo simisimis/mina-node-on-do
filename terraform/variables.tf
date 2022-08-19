@@ -32,5 +32,6 @@ variable "ansible_user_pass" {
 
 variable "mina_wallet" {
   description = "Path to your existing mina wallet"
+  default = ""
 }
 
