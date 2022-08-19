@@ -1,12 +1,41 @@
 ---
-- name: Add mina user with sudo rights
-  user:
-    name: mina
-    group: sudo
-
-- name: Add SSH key to user
-  authorized_key:
-    user: mina
+- name: Add mina apt repo
+  become: true
+  ansible.builtin.apt_repository:
+    repo: deb [trusted=yes] http://packages.o1test.net bionic stable
     state: present
-    key: "{{ lookup('file', pub_key) }}"
+    filename: mina
+    update_cache: false
+
+- name: Needed packages from apt
+  become: true
+  ansible.builtin.apt:
+    update_cache: true
+    pkg:
+      - curl
+      - unzip
+      - mina-mainnet=1.3.0-9b0369c
+      - mina-generate-keypair=1.3.0-9b0369c
+
+- name: Create directory for mina keys
+  ansible.builtin.file:
+    path: ~/keys
+    state: directory
+    mode: '0700'
+
+- name: Check wallet private key
+  stat:
+    path: "{{ mina_wallet }}"
+  register: wallet_private
+
+- name: Check wallet public key
+  stat:
+    path: "{{ mina_wallet }}.pub"
+  register: wallet_public
+
+- name: confirm path exists
+  debug:
+    msg: wallet exists
+  when: wallet_public.stat.exists and wallet_private.stat.exists
+#"{{ lookup('file', pub_key) }}"
 

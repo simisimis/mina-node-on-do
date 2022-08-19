@@ -30,8 +30,6 @@
             $(just -l |sed 's/^Available recipes:/The following `just` recipes are available:/')
             EOF
             export TF_VAR_do_token=${do_api_token}
-            export TF_VAR_prv_key=id_rsa_DO_mina_node
-            export TF_VAR_pub_key=id_rsa_DO_mina_node.pub
             exec zsh
           '';
         };

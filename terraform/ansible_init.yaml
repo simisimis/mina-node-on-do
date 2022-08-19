@@ -1,0 +1,43 @@
+---
+- name: Prepare mina node for ansible
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Add ansible user and grant sudo rights
+      user:
+        name: mina
+        group: sudo
+        shell: /bin/bash
+        update_password: on_create
+        password: "{{ become_pass | password_hash('sha512') }}"
+    - name: Add SSH key to ansible user
+      authorized_key:
+        user: mina
+        state: present
+        key: "{{ pub_key }}"
+
+    - name: Create directory for mina keys
+      file:
+        path: /home/mina/keys
+        state: directory
+        owner: mina
+        mode: '0700'
+
+    - name: Copy wallet's private key to a droplet
+      copy:
+        src: "{{ mina_wallet }}"
+        dest: /home/mina/keys/my-wallet
+        owner: mina
+        mode: '0600'
+      when: mina_wallet
+      register: wallet_private
+
+    - name: Copy wallet's public key to a droplet
+      copy:
+        src: "{{ mina_wallet }}.pub"
+        dest: /home/mina/keys/my-wallet.pub
+        owner: mina
+        mode: '0644'
+      when: mina_wallet
+      register: wallet_public

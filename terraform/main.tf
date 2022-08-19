@@ -1,3 +1,4 @@
+# Configure the DigitalOcean Provider
 terraform {
   required_providers {
     digitalocean = {
@@ -7,11 +8,6 @@ terraform {
   }
 }
 
-variable "do_token" {}
-variable "prv_key" {}
-variable "pub_key" {}
-
-# Configure the DigitalOcean Provider
 provider "digitalocean" {
   token = var.do_token
 }
@@ -22,11 +18,11 @@ data "digitalocean_ssh_key" "mina-do-ssh-pub" {
 
 # Create a mina node droplet
 resource "digitalocean_droplet" "mina-node" {
-  count    = 1
+  count    = var.node_count
   image    = "ubuntu-18-04-x64"
   name     = "mina-node-${count.index}"
-  region   = "ams3"
-  size     = "s-2vcpu-2gb"
+  region   = var.droplet_region
+  size     = var.droplet_plan
   ssh_keys = [
     data.digitalocean_ssh_key.mina-do-ssh-pub.id
   ]
@@ -42,9 +38,17 @@ resource "digitalocean_droplet" "mina-node" {
   }
 
   provisioner "local-exec" {
-    working_dir = path.cwd
-    command = "ansible-playbook -u root -i '${self.ipv4_address},' --private-key ${path.cwd}/secrets/${var.prv_key} -e 'pub_key=${path.cwd}/secrets/${var.pub_key}' ./mina_ansible_init.yaml"
+    command = "ansible-playbook -u root -i '${self.ipv4_address},' --private-key ${path.cwd}/secrets/${var.prv_key} -e 'pub_key=\"${data.digitalocean_ssh_key.mina-do-ssh-pub.public_key}\"' -e 'become_pass=${var.ansible_user_pass}' -e 'mina_wallet=${var.mina_wallet}' ./ansible_init.yaml"
   }
+}
+
+resource "local_file" "ansible_inventory" {
+  content     = templatefile("${path.module}/templates/ansible_inventory.tpl", { 
+    nodes = digitalocean_droplet.mina-node.*.ipv4_address,
+    user = var.ansible_user
+    become_pass = var.ansible_user_pass
+  })
+  filename    = "${path.cwd}/ansible/hosts"
 }
 
 output "droplet_ip_addresses" {

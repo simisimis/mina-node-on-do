@@ -1,0 +1,12 @@
+---
+- name: Install mina needed packages
+  hosts: all
+  become: yes
+
+#vars_prompt:  
+#  - name: 'my-wallet-password'
+#    prompt: ''
+#    private: yes
+#    confirm: yes
+  roles:
+  - mina
