@@ -3,10 +3,75 @@
   hosts: all
   become: yes
 
-#vars_prompt:  
-#  - name: 'my-wallet-password'
-#    prompt: ''
-#    private: yes
-#    confirm: yes
-  roles:
-  - mina
+  tasks:
+    - name: Add mina apt repo
+      become: true
+      apt_repository:
+        repo: deb [trusted=yes] http://packages.o1test.net bionic stable
+        state: present
+        filename: mina
+        update_cache: false
+
+    - name: Install mina software and dependencies
+      become: true
+      apt:
+        update_cache: true
+        pkg:
+          - curl
+          - unzip
+          - mina-mainnet=1.3.0-9b0369c
+          - mina-generate-keypair=1.3.0-9b0369c
+
+- name: Setup mina wallet
+  hosts: all
+
+  vars_prompt:  
+    - name: walletpass
+      prompt: Enter mina wallet password
+      private: yes
+      confirm: yes
+
+  tasks:
+    - name: Check if folder is empty before proceeding
+      find:
+        paths: '~/keys'
+        file_type: any
+      register: files_found
+
+    - name: create mina wallet key pair
+      shell:
+        cmd: mina-generate-keypair --privkey-path ~/keys/my-wallet
+        creates: ~/keys/my-wallet
+      environment: 
+        MINA_PRIVKEY_PASS: '{{ walletpass }}'
+      run_once: yes
+      when: files_found.matched == 0
+
+    - name: create mina environment file
+      template:
+        src: templates/.mina-env.j2
+        dest: ~/.mina-env
+      with_items:
+        - { walletpass: '{{ walletpass }}', mina_user: '{{ ansible_user }}' }
+      no_log: yes
+
+- name: Setup systemd for mina
+  hosts: all
+
+  tasks:
+    - name: Enable and start mina daemon
+      systemd:
+        enabled: yes
+        name: mina
+        scope: user
+        state: started
+        daemon_reload: yes
+
+    - name: Check if lingering is enabled
+      stat:
+        path: /var/lib/systemd/linger/{{ ansible_user }}
+      register: linger_enabled
+
+    - name: Enable lingering
+      command: "loginctl enable-linger {{ ansible_user }}"
+      when: not linger_enabled.stat.exists

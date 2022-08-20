@@ -18,14 +18,14 @@ variable "droplet_region" {
 
 variable "droplet_plan" {
   description = "Droplet plan/size"
-  default = "s-2vcpu-2gb"
+  default = "m-2vcpu-16gb"
 }
 
-variable "ansible_user" {
+variable "mina_user" {
   default = "mina"
 }
 
-variable "ansible_user_pass" {
+variable "mina_user_pass" {
   default = "openbook"
   sensitive = true
 }

@@ -1,4 +1,5 @@
-do_token = "icouldtellyouoryoucouldcreateyourown"
-prv_key = "id_rsa_DO_mina_node"
-mina_wallet = "/home/bob/keys/my-wallet"
+do_token       = "icouldtellyouoryoucouldcreateyourown"
+prv_key        = "id_rsa_DO_mina_node"
+mina_wallet    = "/home/bob/keys/my-wallet"
 droplet_region = "nyc1"
+droplet_plan   = "m-2vcpu-16gb"

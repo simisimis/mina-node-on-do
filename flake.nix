@@ -25,7 +25,7 @@
           ];
           shellHook = ''
             cat <<EOF
-            Development shell for starting mina node in Digital Ocean.
+            Development shell for starting mina node(s) in Digital Ocean.
 
             $(just -l |sed 's/^Available recipes:/The following `just` recipes are available:/')
             EOF

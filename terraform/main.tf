@@ -38,15 +38,15 @@ resource "digitalocean_droplet" "mina-node" {
   }
 
   provisioner "local-exec" {
-    command = "ansible-playbook -u root -i '${self.ipv4_address},' --private-key ${path.cwd}/secrets/${var.prv_key} -e 'pub_key=\"${data.digitalocean_ssh_key.mina-do-ssh-pub.public_key}\"' -e 'become_pass=${var.ansible_user_pass}' -e 'mina_wallet=${var.mina_wallet}' ./ansible_init.yaml"
+    command = "ansible-playbook -u root -i '${self.ipv4_address},' --private-key ${path.cwd}/secrets/${var.prv_key} -e 'pub_key=\"${data.digitalocean_ssh_key.mina-do-ssh-pub.public_key}\"' -e 'mina_user=${var.mina_user}' -e 'become_pass=${var.mina_user_pass}' -e 'mina_wallet=${var.mina_wallet}' ./ansible_init.yaml"
   }
 }
 
 resource "local_file" "ansible_inventory" {
   content     = templatefile("${path.module}/templates/ansible_inventory.tpl", { 
     nodes = digitalocean_droplet.mina-node.*.ipv4_address,
-    user = var.ansible_user
-    become_pass = var.ansible_user_pass
+    mina_user = var.mina_user
+    become_pass = var.mina_user_pass
   })
   filename    = "${path.cwd}/ansible/hosts"
 }
