@@ -12,8 +12,8 @@ provider "digitalocean" {
   token = var.do_token
 }
 
-data "digitalocean_ssh_key" "mina-do-ssh-pub" {
-  name = "mina-do-ssh-pub"
+data "digitalocean_ssh_key" "mina-do-ssh" {
+  name = "mina-do-ssh"
 }
 
 # Create a mina node droplet
@@ -24,7 +24,7 @@ resource "digitalocean_droplet" "mina-node" {
   region   = var.droplet_region
   size     = var.droplet_plan
   ssh_keys = [
-    data.digitalocean_ssh_key.mina-do-ssh-pub.id
+    data.digitalocean_ssh_key.mina-do-ssh.id
   ]
   provisioner "remote-exec" {
     inline = ["sudo apt update", "sudo apt install python3 -y", "echo done installing python"]
@@ -38,7 +38,7 @@ resource "digitalocean_droplet" "mina-node" {
   }
 
   provisioner "local-exec" {
-    command = "ansible-playbook -u root -i '${self.ipv4_address},' --private-key ${path.cwd}/secrets/${var.prv_key} -e 'pub_key=\"${data.digitalocean_ssh_key.mina-do-ssh-pub.public_key}\"' -e 'mina_user=${var.mina_user}' -e 'become_pass=${var.mina_user_pass}' -e 'mina_wallet=${var.mina_wallet}' ./ansible_init.yaml"
+    command = "ansible-playbook -u root -i '${self.ipv4_address},' --private-key ${path.cwd}/secrets/${var.prv_key} -e 'pub_key=\"${data.digitalocean_ssh_key.mina-do-ssh.public_key}\"' -e 'mina_user=${var.mina_user}' -e 'become_pass=${var.mina_user_pass}' -e 'mina_wallet=${var.mina_wallet}' ./ansible_init.yaml"
   }
 }
 
