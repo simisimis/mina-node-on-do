@@ -59,7 +59,7 @@ After giving 5 minutes or so for mina service to start, as a result you should h
 git clone this repository and `cd` to the root folder of it.
 ```bash
 git clone git@github.com:simisimis/mina-node-on-do.git minanode
-cd !!
+cd minanode
 ```
 ---
 ### Secrets
