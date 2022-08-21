@@ -1,5 +1,6 @@
 ansible/hosts
-secrets/
+!secrets/.gitkeep
+secrets/*
 terraform/terraform.tfstate*
 terraform/terraform.tfvars
 terraform/.terraform*
