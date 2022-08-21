@@ -12,9 +12,10 @@ To be able to provision nodes, you will need the following:
 * (Optional) [just](https://github.com/casey/just) to run project-specific commands easier. _See `Justfile`_
 
 ## Assumptions
-_Assumption is the mother of all..._ But mentioning them in README makes them design choices.
+_Assumption is the mother of all..._  
+But mentioning them in README makes them design choices.  
 The following were assumed:
-* Users will create/copy their ssh key pair to `./secrets` folder and set key's name(not path) as `prv_key` value in `./terraform/terraform.tfvars`
+* Users will create/copy their ssh key pair to `./secrets` folder and set key's name(not path) as `prv_key` value in `./terraform/terraform.tfvars`. Default is `id_rsa_DO_mina_node`
 * Users will name their public ssh key on Digital Ocean as `mina-do-ssh`.
 
 ---
@@ -46,8 +47,10 @@ terraform -chdir=terraform apply -auto-approve
 ```
 3. Provision mina node on created resources
 ```bash
-ansible-playbook -i ansible/hosts --private-key=./secrets/id_rsa_DO_mina_node ./ansible/provision_nodes.yaml
+ansible-playbook -i ./ansible/hosts --private-key=./secrets/id_rsa_DO_mina_node ./ansible/provision_nodes.yaml
 ```
+
+After giving 5 minutes or so for mina service to start, as a result you should have droplet(s) with mina block producer(s) running and listening on port 8302. You can ssh to droplet(s) and inspect this with `ss -ntlp` command.
 
 ---
 
@@ -65,7 +68,7 @@ Following secrets will be needed:
 * SSH keys used to ssh/provision droplets
   - generate before provisioning
   - store SSH keys in `secrets` folder
-  - add generated public key to DO.
+  - add generated public key to DO and name it `mina-do-ssh`.
 * Mina wallet private key passcode
   - typed in prompt during provisioning
 ---
