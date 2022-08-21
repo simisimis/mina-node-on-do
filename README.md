@@ -11,6 +11,12 @@ To be able to provision nodes, you will need the following:
 * Digital Ocean account with billing enabled.
 * (Optional) [just](https://github.com/casey/just) to run project-specific commands easier. _See `Justfile`_
 
+## Assumptions
+_Assumption is the mother of all..._ But mentioning them in README makes them design choices.
+The following were assumed:
+* Users will create/copy their ssh key pair to `./secrets` folder and set key's name(not path) as `prv_key` value in `./terraform/terraform.tfvars`
+* Users will name their public ssh key on Digital Ocean as `mina-do-ssh`.
+
 ---
 TL;DR  
 Follow 3 step Quick Start Guide. Or come back to TOC for details.

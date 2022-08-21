@@ -4,6 +4,7 @@ variable "do_token" {
 }
 variable "prv_key" {
   description = "SSH private key to connect to terraform created resources"
+  default = "id_rsa_DO_mina_node"
 }
 
 variable "node_count" {
