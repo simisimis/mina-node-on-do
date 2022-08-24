@@ -2,7 +2,7 @@ Provisioning Mina node(s) on Digital Ocean droplets
 ===
 
 ## About
-Provisioning mina block producer nodes declaratively on Digital Ocean using terraform and ansible.
+Provisioning mina block producer nodes on mainnet on Digital Ocean using terraform and ansible.
 
 ## Prerequisites
 To be able to provision nodes, you will need the following:
@@ -61,7 +61,7 @@ Generate the ssh key pair and place it in the `secrets` folder:
 ssh-keygen -t rsa -b 2048 -f ./secrets/id_rsa_DO_mina_node
 ```
 Once the keys are in the `secrets` folder, add the generated public key to DO. You can either add it through web, or use `curl` to `POST` it.  
-_NOTE: terraform expects public ssh key on DO to be named `mina-do-ssh`_
+_NOTE: During terraform run it is expected that public ssh key on DO will be named `mina-do-ssh`_
 ```bash
 curl -X POST "https://api.digitalocean.com/v2/account/keys" -H "Authorization: Bearer <your DO token>" -d '{"name":"mina-do-ssh", "public_key":"<contents of ./secrets/id_rsa_DO_mina_node.pub>"}'
 ```
