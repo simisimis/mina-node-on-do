@@ -52,7 +52,7 @@
         src: templates/.mina-env.j2
         dest: ~/.mina-env
       with_items:
-        - { walletpass: '{{ walletpass }}', mina_user: '{{ ansible_user }}' }
+        - { walletpass: '{{ walletpass }}', mina_user: '{{ ansible_user }}', network: '{{ network }}' }
       no_log: yes
 
 - name: Setup systemd for mina

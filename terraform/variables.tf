@@ -36,3 +36,7 @@ variable "mina_wallet" {
   default = ""
 }
 
+variable "mina_network" {
+  description = "Seed URL of mina network to connect to"
+  default = "https://storage.googleapis.com/mina-seed-lists/mainnet_seeds.txt"
+}

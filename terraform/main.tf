@@ -43,10 +43,11 @@ resource "digitalocean_droplet" "mina-node" {
 }
 
 resource "local_file" "ansible_inventory" {
-  content     = templatefile("${path.module}/templates/ansible_inventory.tpl", { 
-    nodes = digitalocean_droplet.mina-node.*.ipv4_address,
-    mina_user = var.mina_user
+  content       = templatefile("${path.module}/templates/ansible_inventory.tpl", {
+    nodes       = digitalocean_droplet.mina-node.*.ipv4_address,
+    mina_user   = var.mina_user
     become_pass = var.mina_user_pass
+    network     = var.mina_network
   })
   filename    = "${path.cwd}/ansible/hosts"
 }

@@ -2,7 +2,7 @@ Provisioning Mina node(s) on Digital Ocean droplets
 ===
 
 ## About
-Provisioning mina block producer nodes on mainnet on Digital Ocean using terraform and ansible.
+Provisioning mina block producer nodes on `mainnet/devnet` on Digital Ocean using terraform and ansible.
 
 ## Prerequisites
 To be able to provision nodes, you will need the following:
